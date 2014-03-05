@@ -1,0 +1,39 @@
+{
+  "uuid": "81a1fe80-e2b2-4831-8230-ba0e55364d1e",
+  "shortName": "QRShare",
+  "longName": "QRShare",
+  "companyName": "Gretchen Maculo",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+	"capabilities": [
+		"configurable"
+	],
+  "appKeys": {
+		"QRContent1": 0,
+		"QRContent2": 1,
+		"QRContent3": 2,
+		"QRContent4": 3,
+		"QRDesc1": 4,
+		"QRDesc2": 5,
+		"QRDesc3": 6,
+		"QRDesc4": 7
+  },
+  "resources": {
+    "media": [
+      {
+        "type": "raw",
+        "name": "QR_ERROR",
+        "file": "images/qr-error.pbi"
+      },
+      {
+        "type": "png",
+				"menuIcon": true,
+        "name": "IMAGE_MENU_ICON",
+        "file": "images/qr-icon.png"
+      }
+    ]
+  }
+}
