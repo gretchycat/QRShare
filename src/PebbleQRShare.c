@@ -45,15 +45,16 @@ enum SettingsKeys {
 
 #define QRCL v4+1
 #define DL 16
-
-char QRContent1[QRCL]=" ";
-char QRContent2[QRCL]=" ";
-char QRContent3[QRCL]=" ";
-char QRContent4[QRCL]=" ";
-char QRDesc1[DL]=" ";
-char QRDesc2[DL]=" ";
-char QRDesc3[DL]=" ";
-char QRDesc4[DL]=" ";
+#define MyTupletCString(_key, _cstring) \
+((const Tuplet) { .type = TUPLE_CSTRING, .key = _key, .cstring = { .data = _cstring, .length = strlen(_cstring) + 1 }})
+char QRContent1[QRCL]="1";
+char QRContent2[QRCL]="2";
+char QRContent3[QRCL]="3";
+char QRContent4[QRCL]="4";
+char QRDesc1[DL]="Sample 1";
+char QRDesc2[DL]="Sample 2";
+char QRDesc3[DL]="Sample 3";
+char QRDesc4[DL]="Sample 4";
 static AppSync sync;
 static uint8_t sync_buffer[(QRCL+DL+(7*2))*MAX_CODES+2];
 
@@ -140,10 +141,9 @@ void drawWindow(char*content, char* description)
 
 static void sync_tuple_changed_callback(const uint32_t key, const Tuple *new_tuple, const Tuple *old_tuple, void *context) 
 {
-//	app_log(APP_LOG_LEVEL_INFO, "PebbleQRShare.c", 134, "sync_tuple_changed_callback");
 	char* str=getStr(key);
 	snprintf(str, getStrLen(key), "%s", new_tuple->value->cstring);
-	persist_write_string(key, str);
+	int written=persist_write_string(key, str);
 	drawWindow(getContent(index), getDesc(index));
 }
 
@@ -185,27 +185,28 @@ static void window_unload(Window *window)
 	text_layer_destroy(text_layer);
 }
 
+static void send_cmd(void) {
+  Tuplet value = TupletInteger(1, 1);
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+
+  if (iter == NULL) {
+    return;
+  }
+
+  dict_write_tuplet(iter, &value);
+  dict_write_end(iter);
+
+  app_message_outbox_send();
+}
+
+
 static void init(void) 
 {
-//	app_log(APP_LOG_LEVEL_INFO, "PebbleQRShare.c", 192, "init");
-	Tuplet initial_values[] = {
-		TupletCString(QRCONTENT1_KEY, "Content 1"),
-		TupletCString(QRCONTENT2_KEY, "Content 2"),
-		TupletCString(QRCONTENT3_KEY, "Content 3"),
-		TupletCString(QRCONTENT4_KEY, "Content 4"),
-		TupletCString(QRDESC1_KEY, "Sample 1"),
-		TupletCString(QRDESC2_KEY, "Sample 2"),
-		TupletCString(QRDESC3_KEY, "Sample 3"),
-		TupletCString(QRDESC4_KEY, "Sample 4")
-	};
-
-//	app_log(APP_LOG_LEVEL_INFO, "PebbleQRShare.c", 204, "init");
- 	app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values), sync_tuple_changed_callback, sync_error_callback, NULL);
-    //send_cmd();  
-	//app_message_open(128, 128);
+	app_message_open(512, 512);
 
 //	app_log(APP_LOG_LEVEL_INFO, "PebbleQRShare.c", 209, "init");
-/*	persist_read_string(QRCONTENT1_KEY, QRContent1, sizeof(QRContent1));
+	persist_read_string(QRCONTENT1_KEY, QRContent1, sizeof(QRContent1));
 	persist_read_string(QRCONTENT2_KEY, QRContent2, sizeof(QRContent2));
 	persist_read_string(QRCONTENT3_KEY, QRContent3, sizeof(QRContent3));
 	persist_read_string(QRCONTENT4_KEY, QRContent4, sizeof(QRContent4));
@@ -213,7 +214,23 @@ static void init(void)
 	persist_read_string(QRDESC2_KEY, QRDesc2, sizeof(QRDesc2));
 	persist_read_string(QRDESC3_KEY, QRDesc3, sizeof(QRDesc3));
 	persist_read_string(QRDESC4_KEY, QRDesc4, sizeof(QRDesc4));
-*/
+
+//	app_log(APP_LOG_LEVEL_INFO, "PebbleQRShare.c", 192, "init");
+	Tuplet initial_values[] = {
+		MyTupletCString(QRCONTENT1_KEY, QRContent1),
+		MyTupletCString(QRCONTENT2_KEY, QRContent2),
+		MyTupletCString(QRCONTENT3_KEY, QRContent3),
+		MyTupletCString(QRCONTENT4_KEY, QRContent4),
+		MyTupletCString(QRDESC1_KEY, QRDesc1),
+		MyTupletCString(QRDESC2_KEY, QRDesc2),
+		MyTupletCString(QRDESC3_KEY, QRDesc3),
+		MyTupletCString(QRDESC4_KEY, QRDesc4)
+	};
+
+//	app_log(APP_LOG_LEVEL_INFO, "PebbleQRShare.c", 204, "init");
+ 	app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values), sync_tuple_changed_callback, sync_error_callback, NULL);
+    //send_cmd();  
+
 //	app_log(APP_LOG_LEVEL_INFO, "PebbleQRShare.c", 219, "init");
 	code=NULL;
 
