@@ -1,13 +1,13 @@
-# project  configured on Fri Feb 21 13:08:35 2014 by
+# project  configured on Sat Mar 15 21:18:14 2014 by
 # waf 1.7.11 (abi 98, python 20706f0 on linux2)
-# using /home/gretchen/pebble-dev/PebbleSDK-2.0.0/Pebble/waf configure build
+# using /home/gretchen/pebble-dev/PebbleSDK-2.0.1/Pebble/waf configure build
 #
 ----------------------------------------
 Setting top to
-/home/gretchen/Dropbox/Projects/PebbleQRShare
+/home/gretchen/Dropbox/Projects/QRShare
 ----------------------------------------
 Setting out to
-/home/gretchen/Dropbox/Projects/PebbleQRShare/build
+/home/gretchen/Dropbox/Projects/QRShare/build
 ----------------------------------------
 Checking for program gcc,cc
 arm-none-eabi-gcc

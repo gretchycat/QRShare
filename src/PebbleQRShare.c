@@ -147,18 +147,16 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple *new_tup
 	drawWindow(getContent(index), getDesc(index));
 }
 
-static void up_click_handler(ClickRecognizerRef recognizer, void *context) 
+static void down_click_handler(ClickRecognizerRef recognizer, void *context) 
 {
-	//text_layer_set_text(text_layer, "Up");
 	index++;
 	if(index >=MAX_CODES)
 		index=0;
 	drawWindow(getContent(index), getDesc(index));
 }
 
-static void down_click_handler(ClickRecognizerRef recognizer, void *context) 
+static void up_click_handler(ClickRecognizerRef recognizer, void *context) 
 {
-	//text_layer_set_text(text_layer, "Down");
 	index--;
 	if(index<0)
 		index=MAX_CODES-1;
